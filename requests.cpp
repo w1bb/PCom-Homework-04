@@ -36,6 +36,25 @@ string compute_get_request(
 
 string compute_post_request(
     string host, string url, string content_type,
+    vector<string> body_data
+) {
+    stringstream sout;
+
+    sout << "POST " << url << " HTTP/1.1" << HTTP_NL;
+    sout << "Host: " << host << HTTP_NL;
+    sout << "Content-Type: " << content_type << HTTP_NL;
+
+    string body;
+    for (string& field : body_data)
+        (body += "field").push_back('&');
+    sout << "Content-Length: " << body.size() << HTTP_NL;
+    
+    sout << HTTP_NL << body;    
+    return sout.str();
+}
+
+string compute_post_request(
+    string host, string url, string content_type,
     vector<string> body_data, string header, string cookie
 ) {
     stringstream sout;

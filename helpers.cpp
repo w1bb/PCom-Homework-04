@@ -61,7 +61,23 @@ void send_to_server(int sockfd, char *message) {
     } while (sent < total);
 }
 
-char *receive_from_server(int sockfd) {
+void send_to_server(int sockfd, string& message) {
+    int bytes, sent = 0;
+    const char *message_c = message.c_str();
+    int total = (int)message.size();
+
+    do {
+        bytes = write(sockfd, message_c + sent, total - sent);
+        if (bytes < 0)
+            error("ERROR writing message to socket");
+        if (bytes == 0)
+            break;
+
+        sent += bytes;
+    } while (sent < total);
+}
+
+string receive_from_server(int sockfd) {
     char response[BUFLEN];
     buffer_t buffer;
     int header_end = 0;
@@ -83,9 +99,8 @@ char *receive_from_server(int sockfd) {
             header_end += HEADER_TERMINATOR_SIZE;
             
             int content_length_start = buffer.find_insensitive(CONTENT_LENGTH, CONTENT_LENGTH_SIZE);
-            if (content_length_start < 0) {
-                continue;           
-            }
+            if (content_length_start < 0)
+                continue;
 
             content_length_start += CONTENT_LENGTH_SIZE;
             content_length = strtol(buffer.data + content_length_start, NULL, 10);
@@ -105,7 +120,10 @@ char *receive_from_server(int sockfd) {
         buffer.append(response, (size_t)bytes);
     }
     buffer.append("", 1);
-    return buffer.data;
+
+    string response_str = string(buffer.data);
+    buffer.destroy();
+    return response_str;
 }
 
 char *basic_extract_json_response(char *str) {

@@ -27,6 +27,11 @@ string compute_get_request(
 
 string compute_post_request(
     string host, string url, string content_type,
+    vector<string> body_data
+);
+
+string compute_post_request(
+    string host, string url, string content_type,
     vector<string> body_data, string header, string cookie
 );
 

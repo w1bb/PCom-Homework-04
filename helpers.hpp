@@ -1,6 +1,10 @@
 #ifndef _WI_HELPERS_CPP_
 #define _WI_HELPERS_CPP_
 
+#include <string>
+
+using std::string;
+
 #define BUFLEN 4096
 #define LINELEN 1000
 
@@ -20,9 +24,10 @@ void close_connection(int sockfd);
 
 // send a message to a server
 void send_to_server(int sockfd, char *message);
+void send_to_server(int sockfd, string& message);
 
 // receives and returns the message from a server
-char *receive_from_server(int sockfd);
+string receive_from_server(int sockfd);
 
 // extracts and returns a JSON from a server response
 char *basic_extract_json_response(char *str);
