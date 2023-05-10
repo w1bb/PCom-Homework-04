@@ -10,10 +10,11 @@ CXXFLAGS = -g -std=c++17 -Wall -Wextra -Wshadow -Wmissing-declarations
 LDFLAGS = # -lm
 
 # Final result
-OUTPUT = main
+OUTPUT = client
 
 # Intermediate results
-OBJFILES = structures.o
+OBJFILESCPP = structures.o buffer.o
+OBJFILESC = 
 
 # Archive name
 ARCHIVE = Vintila_Valentin-Ioan_323CA_Tema3PC.zip
@@ -22,12 +23,15 @@ ARCHIVE = Vintila_Valentin-Ioan_323CA_Tema3PC.zip
 
 # ======== BUILD INSTRUCTIONS ========
 
-build: $(OUTPUT)
+build: $(OBJFILESC) $(OBJFILESCPP) $(OUTPUT)
 
-$(OBJFILES): %.o:%.cpp %.hpp
+$(OBJFILESC): %.o:%.c %.h
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
-$(OUTPUT): $(OUTPUT).cpp $(OBJFILES)
+$(OBJFILESCPP): %.o:%.cpp %.hpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
+
+$(OUTPUT): $(OUTPUT).cpp $(OBJFILESC) $(OBJFILESCPP)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 
@@ -35,7 +39,7 @@ $(OUTPUT): $(OUTPUT).cpp $(OBJFILES)
 # ======== CLEANUP AND PACKING ========
 
 clean:
-	rm -rf $(OUTPUT) $(OBJFILES)
+	rm -rf $(OUTPUT) $(OBJFILESC) $(OBJFILESCPP)
 
 pack:
-	zip $(ARCHIVE) -r -9 *.cpp *.hpp Makefile README nlohmann
+	zip $(ARCHIVE) -r -9 *.c *.cpp *.hpp Makefile README nlohmann

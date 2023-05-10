@@ -5,9 +5,9 @@
 #include <string>
 #include <vector>
 
+using std::stringstream;
 using std::string;
 using std::vector;
-using std::stringstream;
 
 #define HTTP_NL "\r\n"
 
