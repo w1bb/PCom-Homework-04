@@ -13,7 +13,7 @@ LDFLAGS = # -lm
 OUTPUT = main
 
 # Intermediate results
-OBJFILES = 
+OBJFILES = structures.o
 
 # Archive name
 ARCHIVE = Vintila_Valentin-Ioan_323CA_Tema3PC.zip
@@ -23,6 +23,9 @@ ARCHIVE = Vintila_Valentin-Ioan_323CA_Tema3PC.zip
 # ======== BUILD INSTRUCTIONS ========
 
 build: $(OUTPUT)
+
+$(OBJFILES): %.o:%.cpp %.hpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(OUTPUT): $(OUTPUT).cpp $(OBJFILES)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
