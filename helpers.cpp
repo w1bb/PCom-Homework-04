@@ -66,6 +66,8 @@ void send_to_server(int sockfd, string& message) {
     const char *message_c = message.c_str();
     int total = (int)message.size();
 
+    cout << "SENT: " << message << endl;
+
     do {
         bytes = write(sockfd, message_c + sent, total - sent);
         if (bytes < 0)

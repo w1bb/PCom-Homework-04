@@ -1,9 +1,12 @@
 #ifndef _WI_HELPERS_CPP_
 #define _WI_HELPERS_CPP_
 
+#include <iostream> // TODO - remove
 #include <string>
 
 using std::string;
+using std::cout;
+using std::endl;
 
 #define BUFLEN 4096
 #define LINELEN 1000

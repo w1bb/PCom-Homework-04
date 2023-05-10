@@ -46,7 +46,8 @@ string compute_post_request(
 
     string body;
     for (string& field : body_data)
-        (body += "field").push_back('&');
+        (body += field).push_back('&');
+    body.pop_back();
     sout << "Content-Length: " << body.size() << HTTP_NL;
     
     sout << HTTP_NL << body;    
@@ -65,7 +66,8 @@ string compute_post_request(
 
     string body;
     for (string& field : body_data)
-        (body += "field").push_back('&');
+        (body += field).push_back('&');
+    body.pop_back();
     sout << "Content-Length: " << body.size() << HTTP_NL;
     sout << header << HTTP_NL;
     sout << "Cookie: " << cookie << HTTP_NL;
@@ -86,7 +88,8 @@ string compute_post_request(
 
     string body;
     for (string& field : body_data)
-        (body += "field").push_back('&');
+        (body += field).push_back('&');
+    body.pop_back();
     sout << "Content-Length: " << body.size() << HTTP_NL;
     sout << "Cookie: ";
     for (string& cookie : cookies)

@@ -1,6 +1,15 @@
 // TOOD - modify
 #include <bits/stdc++.h>
 
+#include <stdio.h>          /* printf, sprintf */
+#include <stdlib.h>         /* exit, atoi, malloc, free */
+#include <unistd.h>         /* read, write, close */
+#include <string.h>         /* memcpy, memset */
+#include <sys/socket.h>     /* socket, connect */
+#include <netinet/in.h>     /* struct sockaddr_in, struct sockaddr */
+#include <netdb.h>          /* struct hostent, gethostbyname */
+#include <arpa/inet.h>
+
 // Include JSON support
 #include "nlohmann/json.hpp"
 
@@ -112,6 +121,47 @@ string interact_logout(int sockfd, string cookie) {
     return response;
 }
 
+// - - - - -
+
 int main() {
+    string command, response;
+    int sockfd;
+    
+    while (1) {
+        sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
+        // TODO - check sockfd < 0 ?
+        getline(cin, command);
+
+        if (command == "register") {
+            response = interact_register(sockfd);
+
+            cout << "  (server: " << response << ")" << endl;
+        } else if (command == "login") {
+            // TODO
+        } else if (command == "enter_library") {
+            // TODO
+        } else if (command == "get_books") {
+            // TODO
+        } else if (command == "get_book") {
+            // TODO
+        } else if (command == "add_book") {
+            // TODO
+        } else if (command == "delete_book") {
+            // TODO
+        } else if (command == "logout") {
+            // TODO
+        } else if (command == "exit") {
+            close_connection(sockfd);
+            break;
+        } else {
+            cout << "[!] Error: Invalid command" << endl;
+            cout << "Valid commands are:" << endl;
+            cout << "  register | login | enter_library | get_books |" << endl;
+            cout << "  add_book | delete_book | logout | exit" << endl;
+        }
+
+        close_connection(sockfd);
+    }
+
     return 0;
 }

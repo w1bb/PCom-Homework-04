@@ -6,14 +6,14 @@
 
 # C++ options
 CXX = g++
-CXXFLAGS = -g -std=c++17 -Wall -Wextra -Wshadow -Wmissing-declarations
+CXXFLAGS = -g -std=c++17 -Wall -Wextra -Wshadow
 LDFLAGS = # -lm
 
 # Final result
 OUTPUT = client
 
 # Intermediate results
-OBJFILESCPP = buffer.o helpers.o structures.o
+OBJFILESCPP = buffer.o helpers.o requests.o structures.o
 OBJFILESC = 
 
 # Archive name
