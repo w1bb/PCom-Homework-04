@@ -12,6 +12,8 @@ struct buffer_t {
     char *data;
     size_t size;
 
+    buffer_t();
+
     // - - - - -
 
     buffer_t& init();

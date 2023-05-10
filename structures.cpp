@@ -12,6 +12,7 @@ json_t credentials_t::to_json() const {
         {"username", user},
         {"password", pass}
     };
+    return credentials_json;
 }
 
 // - - - - -
@@ -25,11 +26,12 @@ void book_t::read_to_add() {
 }
 
 json_t book_t::to_json() const {
-    json_t credentials_json = {
+    json_t book_json = {
         {"title", title},
         {"author", author},
         {"genre", genre},
         {"publisher", publisher},
         {"page_count", page_count}
     };
+    return book_json;
 }

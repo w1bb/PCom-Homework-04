@@ -2,6 +2,8 @@
 
 // - - - - -
 
+buffer_t::buffer_t() : data(NULL), size(0) {}
+
 buffer_t& buffer_t::init() {
     data = NULL;
     size = 0;
