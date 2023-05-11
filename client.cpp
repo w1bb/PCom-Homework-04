@@ -121,8 +121,10 @@ string interact_logout(int sockfd, string cookie) {
 // - - - - -
 
 int main() {
-    string command, response;
+    string command, response, cookie;
     int sockfd;
+
+    bool logged_in = false;
     
     while (1) {
         sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
@@ -131,7 +133,6 @@ int main() {
 
         if (command == "register") {
             response = interact_register(sockfd);
-
             optional<json_t> json_response = extract_json_response(response);
             if (json_response.has_value()) {
                 string error_str = json_response.value()["error"].get<string>();
@@ -140,7 +141,20 @@ int main() {
                 cout << "[OK] Registered successfully!" << endl;
             }
         } else if (command == "login") {
-            // TODO
+            if (logged_in) {
+                cout << "[!] Error: The user is already logged in!" << endl;
+            } else {
+                response = interact_login(sockfd);
+                optional<json_t> json_response = extract_json_response(response);
+                if (json_response.has_value()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                } else {
+                    logged_in = true;
+                    cookie = extract_cookie(response);
+                    cout << "[OK] Logged in - welcome!" << endl;
+                }
+            }
         } else if (command == "enter_library") {
             // TODO
         } else if (command == "get_books") {

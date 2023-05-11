@@ -47,3 +47,8 @@ optional<json_t> extract_json_response(string response) {
     if (response == "") return {};
     return json_t::parse(response);
 }
+
+string extract_cookie(string response) {
+    response = response.substr(response.find("\r\nSet-Cookie: ") + 14);
+    return response.substr(0, response.find("\r\n"));
+}
