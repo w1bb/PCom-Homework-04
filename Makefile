@@ -13,7 +13,7 @@ LDFLAGS = # -lm
 OUTPUT = client
 
 # Intermediate results
-OBJFILESCPP = buffer.o helpers.o requests.o structures.o
+OBJFILESCPP = buffer.o helpers.o misc.o requests.o structures.o
 OBJFILESC = 
 
 # Archive name

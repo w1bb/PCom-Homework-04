@@ -18,6 +18,7 @@
 #include "requests.hpp"
 #include "helpers.hpp"
 #include "buffer.hpp"
+#include "misc.hpp"
 
 // - - - - -
 
@@ -39,9 +40,8 @@ string interact_register(int sockfd) {
     send_to_server(sockfd, message);
 
     string response = receive_from_server(sockfd);
-    if (response == "error") {
-        // TODO - throw
-    }
+    if (response == "error")
+        throw "interact_register() -> receive_from_server() error";
     return response;
 }
 
@@ -56,9 +56,8 @@ string interact_login(int sockfd) {
     send_to_server(sockfd, message);
 
     string response = receive_from_server(sockfd);
-    if (response == "error") {
-        // TODO - throw
-    }
+    if (response == "error")
+        throw "interact_login() -> receive_from_server() error";
     return response;
 }
 
@@ -69,9 +68,8 @@ string interact_access(int sockfd, string url, string cookie) {
     send_to_server(sockfd, message);
 
     string response = receive_from_server(sockfd);
-    if (response == "error") {
-        // TODO - throw
-    }
+    if (response == "error")
+        throw "interact_access() -> receive_from_server() error";
     return response;
 }
 
@@ -87,9 +85,8 @@ string interact_add(
     send_to_server(sockfd, message);
 
     string response = receive_from_server(sockfd);
-    if (response == "error") {
-        // TODO - throw
-    }
+    if (response == "error")
+        throw "interact_add() -> receive_from_server() error";
     return response;
 }
 
@@ -102,9 +99,8 @@ string interact_delete(
     send_to_server(sockfd, message);
 
     string response = receive_from_server(sockfd);
-    if (response == "error") {
-        // TODO - throw
-    }
+    if (response == "error")
+        throw "interact_delete() -> receive_from_server() error";
     return response;
 }
 
@@ -115,9 +111,8 @@ string interact_logout(int sockfd, string cookie) {
     send_to_server(sockfd, message);
 
     string response = receive_from_server(sockfd);
-    if (response == "error") {
-        // TODO - throw
-    }
+    if (response == "error")
+        throw "interact_logout() -> receive_from_server() error";
     return response;
 }
 
@@ -129,13 +124,19 @@ int main() {
     
     while (1) {
         sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
-        // TODO - check sockfd < 0 ?
+        ASSERT(sockfd >= 0);
         getline(cin, command);
 
         if (command == "register") {
             response = interact_register(sockfd);
 
-            cout << "  (server: " << response << ")" << endl;
+            optional<json_t> json_response = extract_json_response(response);
+            if (json_response.has_value()) {
+                string error_str = json_response.value()["error"].get<string>();
+                cout << "[!] Error: " << error_str << endl;
+            } else {
+                cout << "[OK] Registered successfully!" << endl;
+            }
         } else if (command == "login") {
             // TODO
         } else if (command == "enter_library") {
@@ -154,12 +155,11 @@ int main() {
             close_connection(sockfd);
             break;
         } else {
-            cout << "[!] Error: Invalid command" << endl;
+            cout << "[!] Error: Invalid command!" << endl;
             cout << "Valid commands are:" << endl;
             cout << "  register | login | enter_library | get_books |" << endl;
             cout << "  add_book | delete_book | logout | exit" << endl;
         }
-
         close_connection(sockfd);
     }
 

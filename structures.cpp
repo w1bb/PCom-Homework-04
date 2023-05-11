@@ -35,3 +35,12 @@ json_t book_t::to_json() const {
     };
     return book_json;
 }
+
+// - - - - -
+
+optional<json_t> extract_json_response(string response) {
+    response = response.substr(response.find("\r\n\r\n") + 4);
+    // cout << ">>> " << response << " <<<" << std::endl;
+    if (response == "") return {};
+    return json_t::parse(response);
+}

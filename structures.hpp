@@ -2,10 +2,12 @@
 #define _WI_STRUCTURES_HPP_
 
 #include <iostream>
+#include <optional>
 #include <string>
 
 #include "nlohmann/json.hpp"
 
+using std::optional;
 using std::string;
 using std::cout;
 using std::cin;
@@ -35,5 +37,9 @@ struct book_t {
     void read_to_add();
     json_t to_json() const;
 };
+
+// - - - - -
+
+optional<json_t> extract_json_response(string response);
 
 #endif // _WI_STRUCTURES_HPP_
