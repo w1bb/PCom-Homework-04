@@ -121,10 +121,11 @@ string interact_logout(int sockfd, string cookie) {
 // - - - - -
 
 int main() {
-    string command, response, cookie;
+    string command, response, cookie, jwt;
     int sockfd;
 
     bool logged_in = false;
+    bool library_access = false;
     
     while (1) {
         sockfd = open_connection(IP, PORT, AF_INET, SOCK_STREAM, 0);
@@ -166,7 +167,22 @@ int main() {
         } else if (command == "delete_book") {
             // TODO
         } else if (command == "logout") {
-            // TODO
+            if (!logged_in) {
+                cout << "[!] Error: Nobody to log out!" << endl;
+            } else {
+                response = interact_logout(sockfd, cookie);
+                optional<json_t> json_response = extract_json_response(response);
+                if (json_response.has_value()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                } else {
+                    jwt.clear();
+                    cookie.clear();
+                    logged_in = false;
+                    library_access = false;
+                    cout << "[OK] Logged out - goodbye!" << endl;
+                }
+            }
         } else if (command == "exit") {
             close_connection(sockfd);
             break;
