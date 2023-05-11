@@ -1,11 +1,15 @@
-#include <cstdlib>     /* exit, atoi, malloc, free */
-#include <cstdio>
-#include <unistd.h>     /* read, write, close */
-#include <cstring>     /* memcpy, memset */
-#include <sys/socket.h> /* socket, connect */
-#include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
-#include <netdb.h>      /* struct hostent, gethostbyname */
+// Copyright Valentin-Ioan Vintila 2023.
+// All rights reserved.
+
+#include <cstdlib>
+#include <unistd.h>
+#include <cstring>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include <arpa/inet.h>
+
+// Include our headers
 #include "helpers.hpp"
 #include "buffer.hpp"
 
@@ -13,6 +17,8 @@
 #define HEADER_TERMINATOR_SIZE (sizeof(HEADER_TERMINATOR) - 1)
 #define CONTENT_LENGTH "Content-Length: "
 #define CONTENT_LENGTH_SIZE (sizeof(CONTENT_LENGTH) - 1)
+
+// - - - - -
 
 void error(const char *msg) {
     perror(msg);

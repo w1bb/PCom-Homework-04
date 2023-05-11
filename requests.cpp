@@ -1,3 +1,6 @@
+// Copyright Valentin-Ioan Vintila 2023.
+// All rights reserved.
+
 #include "requests.hpp"
 
 string compute_get_request(

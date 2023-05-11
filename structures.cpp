@@ -1,3 +1,6 @@
+// Copyright Valentin-Ioan Vintila 2023.
+// All rights reserved.
+
 #include "structures.hpp"
 
 // - - - - -

@@ -1,3 +1,6 @@
+// Copyright Valentin-Ioan Vintila 2023.
+// All rights reserved.
+
 #ifndef _WI_STRUCTURES_HPP_
 #define _WI_STRUCTURES_HPP_
 

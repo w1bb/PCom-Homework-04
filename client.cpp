@@ -1,19 +1,18 @@
-// TOOD - modify
-#include <bits/stdc++.h>
+// Copyright Valentin-Ioan Vintila 2023.
+// All rights reserved.
 
-#include <stdio.h>          /* printf, sprintf */
-#include <stdlib.h>         /* exit, atoi, malloc, free */
-#include <unistd.h>         /* read, write, close */
-#include <string.h>         /* memcpy, memset */
-#include <sys/socket.h>     /* socket, connect */
-#include <netinet/in.h>     /* struct sockaddr_in, struct sockaddr */
-#include <netdb.h>          /* struct hostent, gethostbyname */
+#include <iostream>
+#include <string>
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include <arpa/inet.h>
 
 // Include JSON support
 #include "nlohmann/json.hpp"
 
-// Include helper headers
+// Include our headers
 #include "structures.hpp"
 #include "requests.hpp"
 #include "helpers.hpp"
@@ -22,7 +21,10 @@
 
 // - - - - -
 
-using namespace std;
+using std::string;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 #define IP "34.254.242.81"
 #define PORT 8080
