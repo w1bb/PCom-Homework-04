@@ -63,9 +63,9 @@ string interact_login(int sockfd) {
     return response;
 }
 
-string interact_access(int sockfd, string url, string cookie) {
+string interact_access(int sockfd, string cookie) {
     string message = compute_get_request(
-        IP, url, {cookie}
+        IP, "/api/v1/tema/library/access", {cookie}
     );
     send_to_server(sockfd, message);
 
@@ -107,7 +107,7 @@ string interact_delete(
 }
 
 string interact_logout(int sockfd, string cookie) {
-    string message = compute_delete_request(
+    string message = compute_get_request(
         IP, "/api/v1/tema/auth/logout", {cookie}
     );
     send_to_server(sockfd, message);
@@ -157,7 +157,22 @@ int main() {
                 }
             }
         } else if (command == "enter_library") {
-            // TODO
+            if (!logged_in) {
+                cout << "[!] Error: Please login before entering the library!" << endl;
+            } else {
+                response = interact_access(sockfd, cookie);
+                optional<json_t> json_response = extract_json_response(response);
+                if (json_response.has_value() &&
+                    !json_response.value()["error"].is_null()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                } else {
+                    cout << "[OK] Welcome to the library!" << endl;
+                    library_access = true;
+                    jwt = extract_jwt_token(response);
+                    cout << "^- Token: " << jwt << endl;
+                }
+            }
         } else if (command == "get_books") {
             // TODO
         } else if (command == "get_book") {

@@ -43,12 +43,21 @@ json_t book_t::to_json() const {
 
 optional<json_t> extract_json_response(string response) {
     response = response.substr(response.find("\r\n\r\n") + 4);
-    cout << ">>> " << response << " <<<" << std::endl;
     if (response == "") return {};
     return json_t::parse(response);
 }
 
 string extract_cookie(string response) {
-    response = response.substr(response.find("\r\nSet-Cookie: ") + 14);
+    size_t start = response.find("\r\nSet-Cookie: ") + 14;
+    size_t end = response.find(' ', start);
+    response = response.substr(start, end-start);
     return response.substr(0, response.find("; "));
+}
+
+string extract_jwt_token(string response) {
+    response = response.substr(response.find("\r\n\r\n") + 4);
+    json_t json = json_t::parse(response);
+    if (json["token"].is_null())
+        return "";
+    return json["token"].get<string>();
 }

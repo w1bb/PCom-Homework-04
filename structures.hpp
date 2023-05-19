@@ -45,5 +45,6 @@ struct book_t {
 
 optional<json_t> extract_json_response(string response);
 string extract_cookie(string response);
+string extract_jwt_token(string response);
 
 #endif // _WI_STRUCTURES_HPP_
