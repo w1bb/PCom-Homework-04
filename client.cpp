@@ -75,6 +75,18 @@ string interact_access(int sockfd, string cookie) {
     return response;
 }
 
+string interact_books(int sockfd, string cookie, string auth_header) {
+    string message = compute_get_request(
+        IP, "/api/v1/tema/library/books", auth_header, cookie
+    );
+    send_to_server(sockfd, message);
+
+    string response = receive_from_server(sockfd);
+    if (response == "error")
+        throw "interact_add() -> receive_from_server() error";
+    return response;
+}
+
 string interact_add(
     int sockfd, string url, string cookie, string auth_header
 ) {
@@ -174,7 +186,22 @@ int main() {
                 }
             }
         } else if (command == "get_books") {
-            // TODO
+            if (!logged_in || !library_access) {
+                cout << "[!] Error: Please login (and enter the library) before getting books!" << endl;
+            } else if (!library_access) {
+                cout << "[!] Error: Please enter the library before getting books!" << endl;
+            } else {
+                response = interact_books(sockfd, cookie, "Authorization: Bearer " + jwt);
+                optional<json_t> json_response;// = extract_json_response(response);
+                if (json_response.has_value() &&
+                    !json_response.value()["error"].is_null()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                } else {
+                    cout << "[OK] Here is the list of books we've collected:" << endl;
+                    cout << response << endl;
+                }
+            }
         } else if (command == "get_book") {
             // TODO
         } else if (command == "add_book") {
