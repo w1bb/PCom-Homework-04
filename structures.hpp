@@ -9,6 +9,7 @@
 #include <string>
 
 #include "nlohmann/json.hpp"
+#include "misc.hpp"
 
 using std::optional;
 using std::string;

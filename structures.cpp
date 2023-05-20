@@ -25,7 +25,14 @@ void book_t::read_to_add() {
     cout << "author="; getline(cin, author);
     cout << "genre="; getline(cin, genre);
     cout << "publisher="; getline(cin, publisher);
-    cout << "page_count="; (cin >> page_count).ignore();
+    
+    string page_count_str;
+    cout << "page_count="; getline(cin, page_count_str);
+    while (!is_number(page_count_str)) {
+        cout << "[!] The page_count you provided is not a valid number! Please try again!" << std::endl;
+        cout << "page_count="; getline(cin, page_count_str);
+    }
+    page_count = std::stoi(page_count_str);
 }
 
 json_t book_t::to_json() const {

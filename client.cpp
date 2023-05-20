@@ -83,17 +83,29 @@ string interact_books(int sockfd, string cookie, string auth_header) {
 
     string response = receive_from_server(sockfd);
     if (response == "error")
-        throw "interact_add() -> receive_from_server() error";
+        throw "interact_books() -> receive_from_server() error";
+    return response;
+}
+
+string interact_book(int sockfd, string id, string cookie, string auth_header) {
+    string message = compute_get_request(
+        IP, "/api/v1/tema/library/books/" + id, auth_header, cookie
+    );
+    send_to_server(sockfd, message);
+
+    string response = receive_from_server(sockfd);
+    if (response == "error")
+        throw "interact_book() -> receive_from_server() error";
     return response;
 }
 
 string interact_add(
-    int sockfd, string url, string cookie, string auth_header
+    int sockfd, string cookie, string auth_header
 ) {
     book_t book;
     book.read_to_add();
     string message = compute_post_request(
-        IP, url, "/api/v1/tema/library/books",
+        IP, "/api/v1/tema/library/books", "application/json",
         {book.to_json().dump()}, auth_header, cookie
     );
     send_to_server(sockfd, message);
@@ -105,10 +117,10 @@ string interact_add(
 }
 
 string interact_delete(
-    int sockfd, string url, string cookie, string auth_header
+    int sockfd, string id, string cookie, string auth_header
 ) {
-    string message = compute_get_request(
-        IP, url, auth_header, cookie
+    string message = compute_delete_request(
+        IP, "/api/v1/tema/library/books/" + id, auth_header, cookie
     );
     send_to_server(sockfd, message);
 
@@ -186,28 +198,72 @@ int main() {
                 }
             }
         } else if (command == "get_books") {
-            if (!logged_in || !library_access) {
+            if (!logged_in) {
                 cout << "[!] Error: Please login (and enter the library) before getting books!" << endl;
             } else if (!library_access) {
                 cout << "[!] Error: Please enter the library before getting books!" << endl;
             } else {
                 response = interact_books(sockfd, cookie, "Authorization: Bearer " + jwt);
+                optional<json_t> json_response = extract_json_response(response);
+                if (json_response.has_value() &&
+                    !json_response.value().is_array() &&
+                    !json_response.value()["error"].is_null()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                } else {
+                    cout << "[OK] Here is the list of books we've collected:" << endl;
+                    bool any_book = false;
+                    for (auto book : json_response.value()) {
+                        cout << "(id: " << book["id"];
+                        cout << ") " << book["title"].get<string>() << endl;
+                        any_book = true;
+                    }
+                    if (!any_book) {
+                        cout << "^- The list is empty!" << endl;
+                    }
+                }
+            }
+        } else if (command == "get_book") {
+            // TODO
+        } else if (command == "add_book") {
+            if (!logged_in) {
+                cout << "[!] Error: Please login (and enter the library) before adding books!" << endl;
+            } else if (!library_access) {
+                cout << "[!] Error: Please enter the library before adding books!" << endl;
+            } else {
+                response = interact_add(sockfd, cookie, "Authorization: Bearer " + jwt);
                 optional<json_t> json_response;// = extract_json_response(response);
                 if (json_response.has_value() &&
                     !json_response.value()["error"].is_null()) {
                     string error_str = json_response.value()["error"].get<string>();
                     cout << "[!] Error: " << error_str << endl;
                 } else {
-                    cout << "[OK] Here is the list of books we've collected:" << endl;
-                    cout << response << endl;
+                    cout << "[OK] Book added successfully!" << endl;
                 }
             }
-        } else if (command == "get_book") {
-            // TODO
-        } else if (command == "add_book") {
-            // TODO
         } else if (command == "delete_book") {
-            // TODO
+            if (!logged_in) {
+                cout << "[!] Error: Please login (and enter the library) before deleting books!" << endl;
+            } else if (!library_access) {
+                cout << "[!] Error: Please enter the library before deleting books!" << endl;
+            } else {
+                string id;
+                cout << "id="; getline(cin, id);
+                while (!is_number(id)) {
+                    cout << "[!] The ID you provided is not a valid number! Please try again!" << endl;
+                    cout << "id="; getline(cin, id);
+                }
+                response = interact_delete(sockfd, id, cookie, "Authorization: Bearer " + jwt);
+                optional<json_t> json_response = extract_json_response(response);
+                if (json_response.has_value() &&
+                    !json_response.value()["error"].is_null()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                } else {
+                    cout << "[OK] Book deleted successfully!" << endl;
+                }
+                
+            }
         } else if (command == "logout") {
             if (!logged_in) {
                 cout << "[!] Error: Nobody to log out!" << endl;

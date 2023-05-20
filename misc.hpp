@@ -4,12 +4,16 @@
 #ifndef _WI_MISC_HPP_
 #define _WI_MISC_HPP_
 
+#include <algorithm>
 #include <iostream>
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 #include <chrono>
 #include <cstdio>
+#include <string>
 #include <ctime>
+
+using std::string;
 
 extern std::ostringstream assert_oss;
 
@@ -29,5 +33,7 @@ extern std::ostringstream assert_oss;
             exit(EXIT_FAILURE); \
         } \
     } while (0);
+
+bool is_number(const string& s);
 
 #endif // _WI_MISC_HPP_
