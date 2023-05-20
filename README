@@ -1,0 +1,70 @@
+Valentin-Ioan VINTILĂ (323CA)
+-----------------------------
+
+    This homework implements a working web client that communicates via a REST
+API. My code reimplements every .c/.h file that is provided in the lab in modern
+C++ for ease of use.
+
+
+File structure
+==============
+
+    The files are organized as presented bellow:
+
+    > Makefile
+        : A complete makefile, containing all the necessary building rules, as
+        : well as packing and cleaning rules.
+    > README
+        : This file, a tour of the project.
+    > nlohmann/json.hpp
+        : This is the JSON library that was recommended by the homework. It
+        : works great for our requirements and it is fast enough!
+    > buffer.hpp + buffer.cpp
+        : These filed provide a wrapper over the basic char array buffer usually
+        : present in C files.
+    > client.cpp
+        : This is the brain of the operation, the client that communicates with
+        : the server.
+    > helpers.hpp + helpers.cpp
+        : These are C++ ports of the original helper files provided in the lab
+        : files.
+    > misc.hpp + misc.cpp
+        : Various functions that don't really fit anywhere else.
+    > requests.hpp + requests.cpp
+        : These files generate GET/DELETE/POST requests based on a set of
+        : provided parameters.
+    > structures.hpp + structures.cpp
+        : These contain the details for credentials & books.
+
+
+Nlohmann - JSON parser
+======================
+
+    Since the JSON format is used a lot in this project, I've decided to import
+a library that already contains the necessary abstractions and conversion rules
+between the JSON format and C++.
+    The library was installed as per their instructions:
+    - Go to their GitHub page (https://github.com/nlohmann/json);
+    - Go to releases;
+    - From the latest entry, download the "json.hpp" file.
+
+
+The client itself
+=================
+
+    The client behaves as expected - it waits for the user's input and parses it
+using C++'s "string" structure.
+    When valid, the command is executed via a "interact_" function (for example,
+the get_book is implemented using the "interact_book" function).
+    Other internal states are also to be remembered, such as the logged in state
+(true if a user is currently logged in) and the library access state (true if
+enter_library was executed).
+
+    In short, all responses are converted to JSON format and then, if an error
+was received, it will be correctly outputed and interpreted. Otherwise, the
+command will carry on and changes will be sent to the server.
+
+    The client was NOT tested on the automatic checker - since there have been
+less than 3 days from the first post containing details about an automatic
+checker, I DO NOT have enough time to figure it out. I am sorry and I hope that
+the PCom team can understand the situation.
