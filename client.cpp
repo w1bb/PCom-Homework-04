@@ -224,7 +224,34 @@ int main() {
                 }
             }
         } else if (command == "get_book") {
-            // TODO
+            if (!logged_in) {
+                cout << "[!] Error: Please login (and enter the library) before getting a book!" << endl;
+            } else if (!library_access) {
+                cout << "[!] Error: Please enter the library before getting a book!" << endl;
+            } else {
+                string id;
+                cout << "id="; getline(cin, id);
+                while (!is_number(id)) {
+                    cout << "[!] The ID you provided is not a valid number! Please try again!" << endl;
+                    cout << "id="; getline(cin, id);
+                }
+                response = interact_book(sockfd, id, cookie, "Authorization: Bearer " + jwt);
+                optional<json_t> json_response = extract_json_response(response);
+                if (json_response.has_value() &&
+                    !json_response.value()["error"].is_null()) {
+                    string error_str = json_response.value()["error"].get<string>();
+                    cout << "[!] Error: " << error_str << endl;
+                    cout << "    ^-: This usually means the ID is not present in the database!" << endl;
+                } else {
+                    cout << "[OK] Here are the details about the book you requested:" << endl;
+                    cout << "ID: " << json_response.value()["id"] << endl;
+                    cout << "Title: " << json_response.value()["title"].get<string>() << endl;
+                    cout << "Author: " << json_response.value()["author"].get<string>() << endl;
+                    cout << "Publisher: " << json_response.value()["publisher"].get<string>() << endl;
+                    cout << "Genre: " << json_response.value()["genre"].get<string>() << endl;
+                    cout << "Pages: " << json_response.value()["page_count"] << endl;
+                }
+            }
         } else if (command == "add_book") {
             if (!logged_in) {
                 cout << "[!] Error: Please login (and enter the library) before adding books!" << endl;
@@ -259,10 +286,10 @@ int main() {
                     !json_response.value()["error"].is_null()) {
                     string error_str = json_response.value()["error"].get<string>();
                     cout << "[!] Error: " << error_str << endl;
+                    cout << "    ^-: This usually means the ID is not present in the database!" << endl;
                 } else {
                     cout << "[OK] Book deleted successfully!" << endl;
                 }
-                
             }
         } else if (command == "logout") {
             if (!logged_in) {
